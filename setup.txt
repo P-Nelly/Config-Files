@@ -1,0 +1,134 @@
+[Flash Iso Drive]
+[Mount]
+[Launch Arch Installation Medium]
+
+{Network Setup}
+
+iwctl
+iwctl station wlan0 scan
+iwctl station wlan0 get-networks
+iwctl station wlan0 connect [hotspot name]
+export http_proxy=http://192.168.49.1:8000/
+export https_proxy=http://192.168.49.1:8000/
+export ftp_proxy=http://192.168.49.1:8000/
+export rsync_proxy=http://192.168.49.1:8000/
+export no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+pacman -Sy networkmanager
+systemctl start NetworkManager
+systmectl restart iwd
+nmtui
+[connect to hotspot]
+
+{Disk Setup}
+
+lsblk
+fdisk /dev/nvme0n1 (<<disk onto which arch will be installed)
+...d... (delete old partitions)
+...n... (create new partitions)
+...w... (write changes)
+mkfs.fat -F32 /dev/nvme0n1p1 (boot partition)
+mkfs.ext4 /dev/nvme0n1p2 (root partition)
+mount /dev/nvme0n1p2 (root partition) /mnt
+mount --mkdir /dev/nvme0n1p1 (boot partition) /mnt/boot/efi
+
+{Install Base System And Text Editor}
+pacstrap -i /mnt base vim
+
+{Generate Fstab File}
+genfstab -U /mnt >> /mnt/etc/fstab
+
+{Change Root Directory}
+arch-chroot /mnt
+
+{Change Root Password}
+passwd (Then Answer Prompts)
+
+{Generate Locales}
+vim /etc/locale.gen
+(uncomment your locales)
+locale-gen
+
+{Install Packages}
+pacman -Syyu base-devel linux-firmware linux linux-headers linux-lts linux-lts-headers (Base Packages)
+networkmanager iwd iw dialog dhcpcd (Networking Packages)
+grub efibootmgr mtools dosfstools os-prober (Boot Packages)
+mesa intel-ucode (Driver Packages)
+qtile nitrogen picom xbindkeys redshift xorg xorg-xinit gnome-terminal (Desktop Environment)
+sudo git (Other Tools)
+
+{Enabling Networking For The Installation)
+systemctl enabel NetworkManager
+vim /etc/environment
+(add next five lines)
+http_proxy=http://192.168.49.1:8000/
+https_proxy=http://192.168.49.1:8000/
+ftp_proxy=http://192.168.49.1:8000/
+rsync_proxy=http://192.168.49.1:8000/
+no_proxy="localhost,127.0.0.1,localaddress,.localdomain.com"
+(stop)
+
+{Installing Bootloader}
+grub-install --target=x86_64-efi --bootloader-id=(pick one) --recheck
+grub-mkconfig -o /boot/grub/grub.cfg
+
+reboot
+
+{Connecting To Network Again}
+(Redo The Step Before The Lase One If Necessary And Reboot At The End Of This Step If So)
+nmtui (connect to hotspot)
+
+{Create User Account(s)}
+useradd -m -g users -G wheel (for su privlages) <username>
+EDITOR=vim visudo
+(uncomment) wheel all = (all) all
+(optionally uncomment) wheel all = (all) nopasswd all
+
+{Setting Clock, Date, And Timezone}
+timedatectl set-ntp true
+timedatectl list-timezones
+timedatectl set-timezone <your timezone>
+
+{Setting Hostname}
+hostnamectl set-hostname <your hostname>
+vim /etc/hosts
+(add lines)
+127.0.0.1 localhost
+127.0.1.1 <your hostname>
+(stop)
+
+reboot
+(login as your user)
+
+{Setting Up Xinit}
+cp /etc/X11/xinit/xinitrc ~/.xinitrc
+vim .xinitrc
+(remove last five lines)
+(add lines to bottom)
+nitrogen --restore &
+picom &
+redshift -P -O 2000K &
+./tether &
+xbindkeys &
+xmodmap ~/.Xmodmap &
+exec qtile start
+(stop)
+
+reboot
+(login as user)
+startx
+
+{Setting up Desktop Environment}
+sudo pacman -S pulseaudio pulseaudio-alsa
+sudo cp <my qtile config> ~/.config/qtile/config.py
+sudo rm .bashrc
+sudo cp <my bashrc> ~/.bashrc
+sudo cp <my xbindkeys> ~/.xbindkeys
+sudo rm .xinitrc
+sudo cp <my xinitrc> ~/.xinitrc
+sudo cp <my xmodmap> ~/.Xmodmap
+(set wallpaper)
+
+
+
+
+
