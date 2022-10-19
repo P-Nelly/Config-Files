@@ -52,7 +52,7 @@ fi
 nitrogen --restore &
 picom &
 redshift -P -O 2000K &
-./~/Documents/tether.sh &
+./.tether.sh &
 xbindkeys &
 xmodmap ~/.Xmodmap &
 xinput set-prop 11 331 0
