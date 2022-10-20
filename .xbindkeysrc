@@ -91,7 +91,7 @@
 
 
 # Launch brave
-"brave"
+"brave --incognito"
   m:0x8 + c:10
 
 #Launch Brave with Tor
