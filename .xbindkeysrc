@@ -1,0 +1,147 @@
+# For the benefit of emacs users: -*- shell-script -*-
+###########################
+# xbindkeys configuration #
+###########################
+#
+# Version: 1.8.7
+#
+# If you edit this file, do not forget to uncomment any lines
+# that you change.
+# The pound(#) symbol may be used anywhere for comments.
+#
+# To specify a key, you can use 'xbindkeys --key' or
+# 'xbindkeys --multikey' and put one of the two lines in this file.
+#
+# The format of a command line is:
+#    "command to start"
+#       associated key
+#
+#
+# A list of keys is in /usr/include/X11/keysym.h and in
+# /usr/include/X11/keysymdef.h
+# The XK_ is not needed.
+#
+# List of modifier:
+#   Release, Control, Shift, Mod1 (Alt), Mod2 (NumLock),
+#   Mod3 (CapsLock), Mod4, Mod5 (Scroll).
+#
+
+# The release modifier is not a standard X modifier, but you can
+# use it if you want to catch release events instead of press events
+
+# By defaults, xbindkeys does not pay attention with the modifiers
+# NumLock, CapsLock and ScrollLock.
+# Uncomment the lines above if you want to pay attention to them.
+
+#keystate_numlock = enable
+#keystate_capslock = enable
+#keystate_scrolllock= enable
+
+# Examples of commands:
+
+"xbindkeys_show" 
+  control+shift + q
+
+# set directly keycode (here control + f with my keyboard)
+"xterm"
+  c:41 + m:0x4
+
+# specify a mouse button
+"xterm"
+  control + b:2
+
+#"xterm -geom 50x20+20+20"
+#   Shift+Mod2+alt + s
+#
+## set directly keycode (here control+alt+mod2 + f with my keyboard)
+#"xterm"
+#  alt + c:0x29 + m:4 + mod2
+#
+## Control+Shift+a  release event starts rxvt
+#"rxvt"
+#  release+control+shift + a
+#
+## Control + mouse button 2 release event starts rxvt
+#"rxvt"
+#  Control + b:2 + Release
+
+
+
+# Increase volume
+"amixer set Master 5%+"
+  XF86AudioRaiseVolume
+
+# Decrease volume
+"amixer set Master 5%-"
+  XF86AudioLowerVolume
+
+# Mute volume
+"amixer set Master toggle"
+  XF86AudioMute
+
+# Increase Volume Beyond Max
+"pactl -- set-sink-volume 0 +5%"
+  m:0x40 + c:123
+
+# Decrease Volume From Beyond Max Without Dropping Below Max Automatically
+"pactl -- set-sink-volume 0 -5%"
+  m:0x40 + c:122
+
+
+
+
+# Launch brave
+"brave"
+  m:0x8 + c:10
+
+#Launch Brave with Tor
+"brave -tor"
+  m:0x9 + c:10
+
+# Launch Ranger (File Manager)
+"gnome-terminal -x ranger"
+  m:0x9 + c:11
+
+# Launch Nautilus (File Manager)
+"nautilus"
+  m:0x8 + c:11
+
+# Launch VsCode
+"code"
+  m:0x8 + c:12
+
+# Launch Steam
+"sudo sysctl dev.i915.perf_stream_paranoid=0 && steam"
+  m:0x8 + c:13
+
+# Launch Tor Browser
+"torbrowser-launcher"
+  m:0xc + c:10
+
+
+# Brightness +7%
+"xbacklight -inc 7%"
+  XF86MonBrightnessUp
+
+# Brightness -7% 
+"xbacklight -dec 7%"
+  XF86MonBrightnessDown
+
+
+
+# Bluetooth On
+"bluetooth-on"
+  m:0x40 + c:56
+
+# Bluetooth Off
+"bluetooth-off"
+  m:0xc + c:56
+
+
+
+# Screen Recorder
+"deepin-screen-recorder"
+  m:0x0 + c:107
+##################################
+# End of xbindkeys configuration #
+##################################
