@@ -1,3 +1,4 @@
+# goes at ~/.xinitrc
 #!/bin/sh
 
 userresources=$HOME/.Xresources
