@@ -1,4 +1,4 @@
-#
+# goes at ~/.bashrc
 # ~/.bashrc
 #
 alias steam='sudo sysctl dev.i915.perf_stream_paranoid=0 && steam'
