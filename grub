@@ -1,4 +1,5 @@
 # GRUB boot loader configuration
+# goes at /etc/default/grub
 
 GRUB_DEFAULT=0
 GRUB_TIMEOUT=5
