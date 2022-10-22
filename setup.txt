@@ -131,4 +131,36 @@ sudo cp <my xmodmap> ~/.Xmodmap
 
 
 
+FOR INSTALLING ARCH WITH DISK ENCRYPTION
+
+fdisk n linuxlvm rest of disk
+cryptsetup luksFormat /dev/nvme0n1p3
+cryptsetup open --type luks /dev/nvme0n1p3 lvm
+pvcreate --dataalignment 1m /dev/mapper/lvm
+vgcreate volgroup0 /dev/mapper/lvm
+lvcreate -L 30GB volgroup0 -n lv_root
+lvcreate -l 100%FREE volgroup0 -n lv_home
+modprobe dm_mod
+vgscan
+vgchange -ay
+mkfs.ext4 /dev/volgroup0/lv_home /dev/volgroup0/lv_root /dev/nvme0n1p2
+mount /dev/volgroup0/lv_root /mnt
+mount --mkdir /dev/nvme0n1p2 /mnt/boot
+mount --mkdir /dev/nvme0n1p1 /mnt/boot/efi
+mount --mkdir /dev/volgroup0/lv_home /mnt/home
+mkdir /mnt/etc
+genfstab -U -p /mnt >> /mnt/etc/fstab
+arch-chroot
+pacman -S lvm2
+vim /etc/mkinitcpio.conf 
+add to hooks "encrypt" "lvm2"
+mkinitcpio -p linux
+mkinitcpio -p linux-lts
+vim /etc/default/grub
+add to GRUB_CMDLINE_LINUX_DEFAULTS="cryptdevice=/dev/nvme0n1p3:volgroup0:allow-discards ...
+uncomment cryptdevice line 
+
+THIS IS ALL THAT NEEDS TO BE ADDED TO CURRENT INSTALLATION PROCESS
+
+
 
